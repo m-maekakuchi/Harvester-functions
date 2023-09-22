@@ -19,6 +19,21 @@ exports.registerCustomState = functions.https.onCall(async (data, context) => {
   };
 });
 
+exports.registerColorIndex = functions.https.onCall(async (data, context) => {
+  console.log("call registerColorIndex");
+  if (!context.auth) {
+    throw new functions.https.HttpsError("unauthenticated", "UIDがありません");
+  }
+  const colorIndex = data.colorIndex;
+  const userUid = context.auth.uid;
+  await admin.auth().setCustomUserClaims(
+      userUid,
+      {registerStatus: 1, colorIndex: colorIndex});
+  return {
+    state: true,
+  };
+});
+
 // Custom Claimを削除
 // exports.removeCustomStatus = functions.https.onCall((data, context) => {
 //   console.log("call removeCustomStatus");
