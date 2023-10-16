@@ -34,6 +34,16 @@ exports.registerColorIndex = functions.https.onCall(async (data, context) => {
   };
 });
 
+exports.deleteUser = functions.firestore
+    .document("deleted_users/{docId}").onCreate(async (snap, context) => {
+      console.log("call deleteUser");
+      const deleteDocument = snap.data();
+      const uid = deleteDocument.uid;
+      console.log(uid);
+
+      await admin.auth().deleteUser(uid);
+    });
+
 // Custom Claimを削除
 // exports.removeCustomStatus = functions.https.onCall((data, context) => {
 //   console.log("call removeCustomStatus");
